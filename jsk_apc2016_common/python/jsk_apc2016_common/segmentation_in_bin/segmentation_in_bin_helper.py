@@ -9,6 +9,13 @@ from geometry_msgs.msg import (
 import time
 from sensor_msgs.point_cloud2 import read_points, create_cloud
 import PyKDL
+import matplotlib.pyplot as plt
+import rospkg
+import cv2
+
+PKG = 'jsk_apc2016_common'
+rospack = rospkg.RosPack()
+pkg_path = rospack.get_path(PKG)
 
 
 def quaternion(rot):
@@ -113,3 +120,22 @@ def do_transform_cloud(cloud, transform):
         points_out.append(p_out)
     res = create_cloud(transform.header, cloud.fields, points_out)
     return res
+
+
+# debug image
+def plot_image(image, name):
+    plt.imsave(pkg_path + '/debug/' + name + '.png', image)
+
+def plot_segment(image, segment, name):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    image = cv2.cvtColor(image, cv2.COLOR_HSV2RGB)
+    alpha = 0.3
+    image[np.logical_not(segment)] = alpha * image[np.logical_not(segment)] + (1 - alpha) * np.array([[150, 150, 150]])
+    #image[np.logical_not(self.bin_mask)] = np.zeros(image[np.logical_not(self.bin_mask)].shape) + 255
+
+    ax.imshow(image.astype('uint8'), interpolation='nearest')
+    fig.savefig(pkg_path + '/debug/' + name + '.png')
+    fig.close()
+    plt.close()

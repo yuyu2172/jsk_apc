@@ -11,6 +11,9 @@ import message_filters
 from sensor_msgs.msg import Image, CameraInfo
 from sensor_msgs.msg import PointCloud2
 from cv_bridge import CvBridge, CvBridgeError
+import jsk_apc2016_common.segmentation_in_bin.segmentation_in_bin_helper as helper
+
+DEBUG = 1
 
 
 class RBOSegmentationInBinNode(RBOSegmentationInBin):
@@ -61,8 +64,8 @@ class RBOSegmentationInBinNode(RBOSegmentationInBin):
         camera2bb_base = self.buffer.lookup_transform(
                 target_frame=camera_info.header.frame_id,
                 source_frame=self.target_bin.bbox.header.frame_id,
-                time=rospy.Time.now(),
-                timeout=rospy.Duration(1.0))
+                time=rospy.Time(0),
+                timeout=rospy.Duration(10.0))
         # get mask_image
         self.mask_img = get_mask_img(
                 camera2bb_base, self.target_bin, self.camera_model)
@@ -71,10 +74,16 @@ class RBOSegmentationInBinNode(RBOSegmentationInBin):
         bb_base2camera = self.buffer.lookup_transform(
                 target_frame=self.target_bin.bbox.header.frame_id,
                 source_frame=cloud.header.frame_id,
-                time=rospy.Time.now(),
-                timeout=rospy.Duration(1.0))
+                time=rospy.Time(0),
+                timeout=rospy.Duration(10.0))
         self.dist_img, self.height_img = get_spatial_img(
                 bb_base2camera, cloud, self.target_bin)
+
+        if DEBUG:
+            helper.plot_image(self.mask_img, 'mask')
+            helper.plot_segment(self.img_color, self.mask_img, 'color')
+            helper.plot_image(self.dist_img, 'dist')
+            helper.plot_image(self.height_img, 'height')
 
         self.set_apc_sample()
         # generate a binary image
