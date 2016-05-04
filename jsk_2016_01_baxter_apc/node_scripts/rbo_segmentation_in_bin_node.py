@@ -4,7 +4,7 @@ from jsk_apc2016_common.segmentation_in_bin.rbo_preprocessing \
         import get_mask_img, get_spatial_img
 from jsk_apc2016_common.segmentation_in_bin.rbo_segmentation_in_bin\
         import RBOSegmentationInBin
-from jsk_apc2016_common.msg import BinInfoArray
+from jsk_apc2016_common.msg import BinInfoArray, SegmentationInBinSync
 from jsk_topic_tools import ConnectionBasedTransport
 import rospy
 import tf2_ros
@@ -32,22 +32,18 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport, RBOSegmentationInBin):
         self.img_pub = self.advertise('~target_mask', Image, queue_size=100)
 
     def subscribe(self):
-        self.pc_sub = message_filters.Subscriber('~input', PointCloud2)
-        self.cam_info_sub = message_filters.Subscriber(
-                '~input/info', CameraInfo)
-        self.img_sub = message_filters.Subscriber('~input/image', Image)
-        self.sync = message_filters.ApproximateTimeSynchronizer(
-                [self.pc_sub,  self.img_sub, self.cam_info_sub],
-                queue_size=100,
-                slop=0.5)
-        self.sync.registerCallback(self._callback)
+        self.sub = rospy.Subscriber('~input', SegmentationInBinSync, self._callback)
 
     def unsubscribe(self):
         self.pc_sub.unregister()
         self.img_sub.unregister()
         self.cam_info_sub.unregister()
 
-    def _callback(self, cloud, img_msg, camera_info):
+    def _callback(self, sync):
+        img_msg = sync.image_color
+        camera_info = sync.cam_info
+        cloud = sync.points
+
         rospy.loginfo('started')
         self.target_bin_name = rospy.get_param('~target_bin_name')
 
@@ -65,16 +61,20 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport, RBOSegmentationInBin):
                 source_frame=self.target_bin.bbox.header.frame_id,
                 time=rospy.Time(0),
                 timeout=rospy.Duration(10.0))
-        # get mask_image
-        self.mask_img = get_mask_img(
-                camera2bb_base, self.target_bin, self.camera_model)
 
-        # dist image
         bb_base2camera = self.buffer.lookup_transform(
                 target_frame=self.target_bin.bbox.header.frame_id,
                 source_frame=cloud.header.frame_id,
                 time=rospy.Time(0),
                 timeout=rospy.Duration(10.0))
+
+        rospy.sleep(10)
+        """
+        # get mask_image
+        self.mask_img = get_mask_img(
+                camera2bb_base, self.target_bin, self.camera_model)
+
+        # dist image
         self.dist_img, self.height_img = get_spatial_img(
                 bb_base2camera, cloud, self.target_bin)
 
@@ -86,7 +86,7 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport, RBOSegmentationInBin):
                     self.predicted_segment, encoding="passthrough"))
         except CvBridgeError as e:
             rospy.logerr('{}'.format(e))
-
+        """ 
         rospy.loginfo('ended')
 
 

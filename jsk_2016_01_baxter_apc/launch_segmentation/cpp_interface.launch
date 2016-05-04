@@ -1,13 +1,29 @@
 <launch>
 
-
+  <arg name="json" default="$(find jsk_2015_05_baxter_apc)/json/layout_12.json"/>
   <arg name="UPPER_SHELF" value="$(find jsk_apc2016_common)/config/bin_upper_shelf.yaml"/>
   <arg name="LOWER_SHELF" value="$(find jsk_apc2016_common)/config/bin_lower_shelf.yaml"/>
-  <arg name="TARGET_BIN" value="g"/>
+  <arg name="TARGET_BIN" value="l"/>
 
-    <arg name="INPUT_POINTS" value="/right_softkinetic_camera/depth/points"/>
-    <arg name="INPUT_INFO" value="/right_softkinetic_camera/rgb/camera_info"/>
-    <arg name="INPUT_IMAGE" value="/right_softkinetic_camera/rgb/image_color"/>
+  <arg name="INPUT_POINTS" value="/right_softkinetic_camera/depth/points"/>
+  <arg name="INPUT_INFO" value="/right_softkinetic_camera/rgb/camera_info"/>
+  <arg name="INPUT_IMAGE" value="/right_softkinetic_camera/rgb/image_color"/>
+
+
+  <!-- set ros param -->  
+  <node pkg="jsk_apc2016_common" type="publish_bin_info.py"
+    name="set_bin_param" output="screen">
+    <param name="json" value="$(arg json)"/>
+    <rosparam file="$(arg UPPER_SHELF)" command="load" ns="upper_shelf"/>
+    <rosparam file="$(arg LOWER_SHELF)" command="load" ns="lower_shelf"/>
+  </node>
+
+<arg name="INPUT_BIN_ARRAY" value="/set_bin_param/bin_array"/>
+
+<param name="/right_hand/target_bin" value="$(arg TARGET_BIN)"/>
+<arg name="INPUT_TARGET" value="/right_hand/target_bin"/>
+
+
 <node name="rbo_topic_synchronizer"
   pkg="jsk_2016_01_baxter_apc" type="rbo_topic_synchronizer"
   output="screen">
@@ -15,4 +31,18 @@
   <remap from="~input/info" to="$(arg INPUT_INFO)"/>
   <remap from="~input/image" to="$(arg INPUT_IMAGE)"/>
 </node>
+
+
+
+<node name="segmentation_in_bin"
+      pkg="jsk_2016_01_baxter_apc" 
+      type="rbo_segmentation_in_bin_node.py" 
+      output="screen">
+      <remap from="~input" to="/rbo_topic_synchronizer/output"/>
+  <remap from="~input/bin_info_array" to="$(arg INPUT_BIN_ARRAY)"/>
+  <remap from="~target_bin_name" to="$(arg INPUT_TARGET)"/>
+  <param name="trained_pkl_path" value="$(find jsk_apc2016_common)/data/trained_segmenter.pkl" />
+  <param name="always_subscribe" value="True"/>
+</node>
+
 </launch>
