@@ -50,6 +50,7 @@ add_message_files(
   FILES
   BinInfo.msg
   BinInfoArray.msg
+  SegmentationInBinSync.msg
   )
 
 ## Generate services in the 'srv' folder

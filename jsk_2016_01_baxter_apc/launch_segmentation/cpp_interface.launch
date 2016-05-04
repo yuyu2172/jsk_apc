@@ -1,0 +1,18 @@
+<launch>
+
+
+  <arg name="UPPER_SHELF" value="$(find jsk_apc2016_common)/config/bin_upper_shelf.yaml"/>
+  <arg name="LOWER_SHELF" value="$(find jsk_apc2016_common)/config/bin_lower_shelf.yaml"/>
+  <arg name="TARGET_BIN" value="g"/>
+
+    <arg name="INPUT_POINTS" value="/right_softkinetic_camera/depth/points"/>
+    <arg name="INPUT_INFO" value="/right_softkinetic_camera/rgb/camera_info"/>
+    <arg name="INPUT_IMAGE" value="/right_softkinetic_camera/rgb/image_color"/>
+<node name="rbo_topic_synchronizer"
+  pkg="jsk_2016_01_baxter_apc" type="rbo_topic_synchronizer"
+  output="screen">
+  <remap from="~input" to="$(arg INPUT_POINTS)"/>
+  <remap from="~input/info" to="$(arg INPUT_INFO)"/>
+  <remap from="~input/image" to="$(arg INPUT_IMAGE)"/>
+</node>
+</launch>
