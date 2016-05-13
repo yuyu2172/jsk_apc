@@ -50,7 +50,7 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport):
         self.height = dist_img.height
         self.width = dist_img.width
         try:
-            self.mask_img = self.bridge.imgmsg_to_cv2(mask_msg, "passthrough")
+            self.mask_img = self.bridge.imgmsg_to_cv2(mask_img, "passthrough")
             self.mask_img = self.mask_img.astype('bool')
         except CvBridgeError as e:
             print "error"
@@ -91,7 +91,10 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport):
 
         # for visualization
         masked_input_img = cv2.cvtColor(self.apc_sample.image, cv2.COLOR_HSV2BGR)
-        self.masked_input_img_pub.publish(masked_input_img)
+        masked_input_msg = self.bridge.cv2_to_imgmsg(
+                masked_input_img)
+        masked_input_msg.header = color_img.header
+        self.masked_input_img_pub.publish(masked_input_msg)
 
         try:
             posterior_img = self.trained_segmenter.\

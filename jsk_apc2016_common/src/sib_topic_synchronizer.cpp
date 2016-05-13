@@ -19,10 +19,10 @@ ros::Publisher pub_;
 void callback(const ImageConstPtr& color_msg, const ImageConstPtr& dist_msg, const ImageConstPtr& height_msg, const ImageConstPtr& mask_msg)
 {
     jsk_apc2016_common::SegmentationInBinSync sync_data;
-    sync_data.color_img = *color_msg;
-    sync_data.dist_img  = *dist_msg;
-    sync_data.height_img = *height_msg;
-    sync_data.mask_img = *mask_msg;
+    sync_data.color_msg = *color_msg;
+    sync_data.dist_msg = *dist_msg;
+    sync_data.height_msg = *height_msg;
+    sync_data.mask_msg = *mask_msg;
     pub_.publish(sync_data);
     ros::Duration(0.5).sleep();
 }
