@@ -30,6 +30,7 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport, RBOSegmentationInBin):
 
         self.bridge = CvBridge()
         self.img_pub = self.advertise('~target_mask', Image, queue_size=100)
+        self.likelihood_pub = self.advertise('~likelihood', Image, queue_size=20)
 
     def subscribe(self):
         self.sub = rospy.Subscriber('~input', SegmentationInBinSync, self._callback)
@@ -83,6 +84,17 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport, RBOSegmentationInBin):
         self.set_apc_sample()
         # generate a binary image
         self.segmentation()
+        print self.trained_segmenter.likelihoods.keys()
+        try:
+            import numpy as np
+            likelihood_img = self.trained_segmenter.\
+                posterior_images_smooth[self.target_object]
+            likelihood_msg = self.bridge.cv2_to_imgmsg(
+                likelihood_img.astype(np.float32))
+            likelihood_msg.header = img_msg.header
+            self.likelihood_pub.publish(likelihood_msg)
+        except CvBridgeError as e:
+            rospy.logerr('{}'.format(e))
         try:
             mask_msg = self.bridge.cv2_to_imgmsg(
                     self.predicted_segment, encoding="mono8")
