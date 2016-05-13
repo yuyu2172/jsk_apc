@@ -52,6 +52,7 @@ class TFBboxToMask(ConnectionBasedTransport):
         mask_img = self.get_mask_img(camera2bb_base, target_bin, self.camera_model)
         mask_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
         mask_msg.header = camera_info.header
+        mask_msg.header.stamp = rospy.Time.now()
         self.pub.publish(mask_msg)
 
     def get_mask_img(self, transform, target_bin, camera_model):
