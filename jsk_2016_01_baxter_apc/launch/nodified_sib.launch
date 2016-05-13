@@ -91,4 +91,11 @@
         args="load jsk_pcl/CentroidPublisher $(arg MANAGER)">
         <remap from="~input" to="sib_extract_pi/output"/>
   </node>
+
+
+  <include file="$(find jsk_2016_01_baxter_apc)/launch/include/sib_visualization.launch">
+      <arg name="LIKELIHOOD" value="sib_TODO"/>
+      <arg name="INPUT_IMAGE" value="/kinect2_torso/hd/image_color"/>
+      <arg name="MASK" value="/sib_rbo/target_mask"/>
+  </include>
 </launch>
