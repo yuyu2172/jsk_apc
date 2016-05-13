@@ -1,5 +1,7 @@
 <launch>
   <arg name="TRAINED_PATH" value="$(find jsk_apc2016_common)/data/trained_segmenter.pkl" />
+  <arg name="INPUT_BIN_ARRAY" value="/set_bin_param/bin_array"/>
+
   <arg name="json" />
   <arg name="MANAGER" value="segmentation_in_bin_manager" />
   <node name="$(arg MANAGER)"
@@ -16,11 +18,11 @@
     <rosparam file="$(arg UPPER_SHELF)" command="load" ns="upper_shelf"/>
     <rosparam file="$(arg LOWER_SHELF)" command="load" ns="lower_shelf"/>
   </node>
-
+ 
   <!-- publish BinInfo.msg from json -->
   <node pkg="jsk_apc2016_common" type="publish_bin_tf.py"
-    name="publish_bin_tf" output="screen">
-    <remap from="~input/bin_info_array" to="/set_bin_param/bin_array"/>
+    name="pub_bin_tf">
+    <remap from="~input/bin_info_array" to="$(arg INPUT_BIN_ARRAY)"/>
   </node>
 
   <include file="$(find jsk_2016_01_baxter_apc)/launch/include/segmentation_for_each_hand.launch">
@@ -30,7 +32,7 @@
     <arg name="MANAGER" value="$(arg MANAGER)" />
     <arg name="JSON" value="$(arg json)" />
     <arg name="HAND" value="left" />
-    <arg name="INPUT_BIN_ARRAY" value="/set_bin_param/bin_array"/>
+    <arg name="INPUT_BIN_ARRAY" value="$(arg INPUT_BIN_ARRAY)"/>
     <arg name="TRAINED_PATH" value="$(arg TRAINED_PATH)" />
   </include>
 <!--
