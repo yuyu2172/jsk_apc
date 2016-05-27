@@ -81,7 +81,7 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport):
         self.set_apc_sample()
         # generate a binary image
         self.segmentation()
-        if np.all(predicted_segment[self.exist3d_img] == 0):
+        if np.all(self.predicted_segment[self.exist3d_img] == 0):
             rospy.logwarn('Output of RBO does not contain any point clouds.')
             return
         try:
