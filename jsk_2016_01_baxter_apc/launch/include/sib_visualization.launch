@@ -52,4 +52,12 @@
       approximate_sync: true
     </rosparam>
   </node>
+  <node name="$(arg HAND)_sib_overlay_image_color_on_mono_posterior"
+    pkg="jsk_perception" type="overlay_image_color_on_mono">
+    <remap from="~input/color" to="/$(arg HAND)_colorized_sib_posterior/output"/>
+    <remap from="~input/mono" to="/$(arg HAND)_softkinetic_camera_resized/image_raw"/>
+    <rosparam>
+      approximate_sync: true
+    </rosparam>
+  </node>
 </launch>
