@@ -85,16 +85,20 @@ class RBOSegmentationInBinNode(ConnectionBasedTransport):
         self.target_object = self.bin_info_dict[self.target_bin_name].target
         self.target_bin_info = self.bin_info_dict[self.target_bin_name]
 
-        self.set_apc_sample()
-        # generate a binary image
-        self.segmentation()
-        if np.any(self.predicted_segment[self.exist3d_img] != 0):
-            predict_msg = self.bridge.cv2_to_imgmsg(
-                    self.predicted_segment, encoding="mono8")
-            predict_msg.header = color_msg.header
-            self.img_pub.publish(predict_msg)
-        else:
-            rospy.logwarn('Output of RBO does not contain any point clouds.')
+        try:
+            self.set_apc_sample()
+            # generate a binary image
+            self.segmentation()
+            if np.any(self.predicted_segment[self.exist3d_img] != 0):
+                predict_msg = self.bridge.cv2_to_imgmsg(
+                        self.predicted_segment, encoding="mono8")
+                predict_msg.header = color_msg.header
+                self.img_pub.publish(predict_msg)
+            else:
+                rospy.logwarn('Output of RBO does not contain any point clouds.')
+        except KeyError, e:
+            rospy.loginfo(repr(e))
+
 
         # ---------------------------------------------------------------------
         # for visualization
