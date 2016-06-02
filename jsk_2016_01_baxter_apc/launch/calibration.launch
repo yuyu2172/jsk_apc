@@ -1,0 +1,15 @@
+<launch>
+  <node pkg="nodelet" type="nodelet" name="right_camera_rect"
+    args="load image_proc/rectify">
+    <remap from="image_mono" to="/cameras/right_hand_camera/image"/>
+    <remap from="camera_info" to="/cameras/right_hand_camera/camera_info"/>
+    <remap from="image_rect" to="/cameras/rigth_hand_camera_rect"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="left_camera_rect"
+    args="load image_proc/rectify">
+    <remap from="image_mono" to="/cameras/left_hand_camera/image"/>
+    <remap from="camera_info" to="/cameras/left_hand_camera/camera_info"/>
+    <remap from="image_rect" to="/cameras/left_hand_camera_rect"/>
+  </node>
+</launch>
