@@ -58,6 +58,15 @@
               to: $(arg HAND)_softkinetic_camera/rgb/image_color
             - from: ~output/image
               to: $(arg HAND)_softkinetic_camera_resized/image_raw
+        - name: $(arg HAND)_image_rectify
+          type: image_proc/rectify
+          remappings:
+            - from: image_mono
+              to: $(arg HAND)_softkinetic_camera_resized/image_raw
+            - from: camera_info
+              to: $(arg HAND)_softkinetic_camera_resized/camera_info
+            - from: image_rect
+              to: $(arg HAND)_softkinetic_camera_resized_rect/image_rect
         - name: $(arg HAND)_sib_mask_image_to_pi
           type: jsk_pcl/MaskImageToPointIndices
           remappings:
@@ -97,6 +106,11 @@
     <rosparam>
       max_queue_size: 100
       approximate_sync: true
+    </rosparam>
+  </group>
+  <group ns="$(arg HAND)_softkinetic_camera_resized_rect">
+    <rosparam>
+      queue_size: 5
     </rosparam>
   </group>
 
