@@ -44,6 +44,7 @@ class BinInfoArrayPublisher(object):
 
             # update bin_info_arr only when rosparam: json is changd
             if self.json_file != json:
+                self.json_file = json
                 # get bbox from rosparam
                 self.from_shelf_param('upper')
                 self.from_shelf_param('lower')
@@ -58,7 +59,7 @@ class BinInfoArrayPublisher(object):
 
                 # create bin_msg
                 self.create_bin_info_arr()
-
+            
             pub_bbox_arr.publish(self.bbox_array)
             pub_bin_info_arr.publish(self.bin_info_arr)
             rate.sleep()
