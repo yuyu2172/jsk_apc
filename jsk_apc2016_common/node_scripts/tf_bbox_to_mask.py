@@ -9,6 +9,7 @@ from jsk_apc2016_common.segmentation_in_bin.bin_data import BinData
 from tf2_geometry_msgs import do_transform_point
 from matplotlib.path import Path
 from jsk_topic_tools import ConnectionBasedTransport
+from jsk_topic_tools import log_utils
 from cv_bridge import CvBridge
 import numpy as np
 
@@ -45,7 +46,7 @@ class TFBboxToMask(ConnectionBasedTransport):
             rospy.logwarn('wrong target_bin_name')
             return
         if target_bin_name == '':
-            rospy.logwarn('target_bin_name is empty string')
+            log_utils.logwarn_throttle(10, 'target_bin_name is empty string. This shows up every 10 seconds.')
             return
 
         target_bin = self.shelf[target_bin_name]
