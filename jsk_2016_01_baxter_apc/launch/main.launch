@@ -17,8 +17,8 @@
   </node>
 
   <!-- shelf-->
-  <arg name="UPPER_SHELF" value="$(find jsk_apc2016_common)/config/bin_upper_shelf_recognition.yaml"/>
-  <arg name="LOWER_SHELF" value="$(find jsk_apc2016_common)/config/bin_lower_shelf_recognition.yaml"/>
+  <arg name="UPPER_SHELF" value="$(find jsk_apc2016_common)/config/bin_upper_shelf.yaml"/>
+  <arg name="LOWER_SHELF" value="$(find jsk_apc2016_common)/config/bin_lower_shelf.yaml"/>
 
   <!-- Publish jsk_apc2016_common/BinInfo from json -->
   <node name="set_bin_param"
