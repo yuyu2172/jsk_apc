@@ -1,0 +1,35 @@
+<launch>
+
+  <!-- 
+       In order to get data, you need to shut the node down properly (?)
+       rosparam set /caljob_creator/quit true
+  -->
+  <include file="$(find caljob_creator)/launch/caljob_create.launch">
+    <!-- Note that the leading forward slash is important here as it indicates to ROS
+         to look for that topic name at global scope, not your namespaced one -->
+    <arg name="joints_topic" value="/robot/joint_states"/>
+    
+    <arg name="output_file" value="$(find jsk_apc2016_common)/data/my_caljob.yaml"/>
+    <arg name="camera_name" value="left_astra"/>
+    <arg name="image_topic" value="/left_hand_camera/rgb/image_rect_color" />
+    <arg name="from_frame" value="/base"/>
+    <arg name="to_frame" value="/left_hand_camera_rgb_optical_frame"/> <!-- unsure about this-->
+    <arg name="image_width" value="640"/>
+    <arg name="image_height" value="480"/>
+    <arg name="motion_type" value="joint" />
+    <arg name="capture_scene" value="true" />
+    <arg name="quit" value="false"/>
+  </include>
+
+   <node name="create_target" pkg="target_finder" type="target_gen" >
+      <param name="target_type" value="0"/>
+      <param name="target_rows" value="5"/>
+      <param name="target_cols" value="6"/>
+      <param name="target_circle_dia" value="0.0278"/>
+      <param name="target_spacing" value="0.0278"/>
+      <param name="target_name" value="Checkerboard5x6"/>
+      <param name="target_frame" value="target_frame"/>
+      <param name="target_file_path" value="$(find jsk_apc2016_common)/data/Checkerboard5x6.yaml"/>
+      <param name="transform_interface" value="default_ti"/>
+   </node>
+</launch>
