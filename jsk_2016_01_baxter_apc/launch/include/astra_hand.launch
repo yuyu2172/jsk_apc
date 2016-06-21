@@ -11,12 +11,10 @@
   </include>
   <node name="left_hand_camera_rgb_static_tf_publisher"
         pkg="tf" type="static_transform_publisher"
-        args="0.02 0.040 0 0.01 0 0 left_hand_camera_depth_optical_frame left_hand_camera_rgb_optical_frame 100" />
+        args="0.03 0.009 0 0.00 0 0 left_hand_camera_depth_optical_frame left_hand_camera_rgb_optical_frame 100" />
   <node name="left_hand_camera_depth_static_tf_publisher"
         pkg="tf" type="static_transform_publisher"
-        args="-0.05 0.03 -0.0 -1.6 -0.05 -0.0 left_hand left_hand_camera_depth_optical_frame 100" />
-
-
+        args="-0.078 0.035 -0.0 -1.57 -0.09 -0.03 left_hand left_hand_camera_depth_optical_frame 100" />
   <!-- right USB #1 -->
   <include file="$(find openni2_launch)/launch/openni2.launch">
     <arg name="respawn" value="true" />
