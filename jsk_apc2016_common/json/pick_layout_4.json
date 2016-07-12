@@ -31,10 +31,9 @@
             "ticonderoga_12_pencils"
         ],
         "bin_F": [
-            "dove_beauty_bar",
-            "crayola_24_ct",
-
-            "kleenex_tissue_box"
+            "womens_knit_gloves",
+            "laugh_out_loud_joke_book",
+            "kleenex_paper_towels"
         ],
         "bin_G": [
             "elmers_washable_no_run_school_glue",
@@ -96,7 +95,7 @@
         },
         {
             "bin": "bin_F",
-            "item": "dove_beauty_bar"
+            "item": "kyjen_squeakin_eggs_plush_puppies"
         },
         {
             "bin": "bin_G",

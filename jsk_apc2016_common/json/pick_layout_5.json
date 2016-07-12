@@ -31,9 +31,9 @@
             "rolodex_jumbo_pencil_cup"
         ],
         "bin_F": [
-            "safety_first_outlet_plugs",
-            "fiskars_scissors_red",
-            "easter_turtle_sippy_cup"
+            "easter_turtle_sippy_cup",
+            "kyjen_squeakin_eggs_plush_puppies",
+            "staples_index_cards"
         ],
         "bin_G": [
             "fitness_gear_3lb_dumbbell",
@@ -96,7 +96,7 @@
         },
         {
             "bin": "bin_F",
-            "item": "safety_first_outlet_plugs"
+            "item": "kyjen_squeakin_eggs_plush_puppies"
         },
         {
             "bin": "bin_G",
